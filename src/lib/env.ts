@@ -10,7 +10,6 @@ const ServerEnv = z.object({
   DIRECT_URL: z.string().min(1).optional(),
   CLERK_SECRET_KEY: OptionalString,
   CLERK_WEBHOOK_SECRET: OptionalString,
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: OptionalString,
   OPENROUTER_API_KEY: OptionalString,
   OPENROUTER_MODEL_PRIMARY: z.string().default("google/gemini-2.5-flash"),
   OPENROUTER_MODEL_FALLBACK: z.string().default("deepseek/deepseek-chat"),
@@ -28,10 +27,14 @@ const ServerEnv = z.object({
 
 const PublicEnv = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: OptionalString,
 });
 
 const parsedServer = ServerEnv.safeParse(process.env);
-const parsedPublic = PublicEnv.safeParse(process.env);
+const parsedPublic = PublicEnv.safeParse({
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+});
 
 if (!parsedServer.success && process.env.NODE_ENV !== "test") {
   console.warn(
@@ -55,9 +58,7 @@ export const env = {
     : ({} as Record<string, never>)),
 } as z.infer<typeof ServerEnv> & z.infer<typeof PublicEnv>;
 
-export const hasClerk = Boolean(
-  env.CLERK_SECRET_KEY && env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-);
+export const hasClerk = Boolean(env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export const hasOpenRouter = Boolean(env.OPENROUTER_API_KEY);
 export const hasUpstash = Boolean(
   env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN,

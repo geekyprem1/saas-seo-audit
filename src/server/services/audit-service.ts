@@ -112,12 +112,16 @@ export async function finalizeAudit(input: {
       accessibilityScore: result.scores.ACCESSIBILITY,
       grade: result.grade,
       rawHtml: result.rawHtml,
+      aiSummary: result.aiSummary ?? null,
       pageData: {
         finalUrl: result.finalUrl,
         hostname: result.hostname,
         hasHttps: result.hasHttps,
         status: result.status,
         contentMetrics: result.contentMetrics,
+        keywords: result.keywords ?? [],
+        competitors: result.competitors ?? [],
+        copyAnalysis: result.copyAnalysis ?? null,
       },
       performanceData: {
         ...result.performance,

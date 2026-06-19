@@ -17,6 +17,7 @@ import { scoreToGrade } from "@/lib/grades";
 import { enhanceIssues } from "@/audit/ai/recommend";
 import { hasOpenRouter } from "@/lib/env";
 import type { IssueDraft } from "@/audit/issues/types";
+import { generateAuditAiData } from "@/audit/ai/audit-analyzer";
 
 export type AuditRunInput = {
   userId: string;
@@ -45,6 +46,10 @@ export type AuditRunResult = {
   };
   contentMetrics: CheckOutputs["metrics"]["content"];
   rawHtml?: string;
+  aiSummary?: string;
+  keywords?: any[];
+  competitors?: any[];
+  copyAnalysis?: any;
 };
 
 export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
@@ -94,6 +99,20 @@ export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
   const seoScore = computeOverall(scores);
   const grade = scoreToGrade(seoScore);
 
+  let aiData = undefined;
+  if (input.enhanceWithAi !== false) {
+    aiData = await generateAuditAiData({
+      url: fetchResult.finalUrl,
+      hostname: normalized.hostname,
+      title: page.title,
+      description: page.metaDescription,
+      headings: [...page.h1, ...page.h2],
+      issues,
+      scores,
+      overallScore: seoScore,
+    });
+  }
+
   return {
     normalizedUrl: normalized.normalizedUrl,
     hostname: normalized.hostname,
@@ -108,5 +127,9 @@ export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
     performance,
     contentMetrics: checks.metrics.content,
     rawHtml: fetchResult.html,
+    aiSummary: aiData?.aiSummary,
+    keywords: aiData?.keywords,
+    competitors: aiData?.competitors,
+    copyAnalysis: aiData?.copyAnalysis,
   };
 }
