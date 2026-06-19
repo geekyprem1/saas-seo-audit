@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Plan {
+  FREE
+  PRO
+  AGENCY
+}
+
+enum Severity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum IssueCategory {
+  TECHNICAL
+  ON_PAGE
+  PERFORMANCE
+  CONTENT
+  ACCESSIBILITY
+  IMAGES
+  LINKS
+}
+
+enum AuditStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id               String   @id @default(cuid())
+  clerkId          String   @unique
+  email            String   @unique
+  name             String?
+  imageUrl         String?
+  plan             Plan     @default(FREE)
+  stripeCustomerId String?  @unique
+  monthlyAudits    Int      @default(0)
+  auditsResetAt    DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  audits        Audit[]
+}
+
+model Audit {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  url         String
+  normalizedUrl String
+  status      AuditStatus @default(PENDING)
+  seoScore    Int?
+  technicalScore   Int?
+  performanceScore Int?
+  contentScore     Int?
+  onPageScore      Int?
+  accessibilityScore Int?
+  grade       String?
+  rawHtml     String?
+  pageData    Json?
+  performanceData Json?
+  aiSummary   String?
+  durationMs  Int?
+  errorMessage String?
+  createdAt   DateTime    @default(now())
+  completedAt DateTime?
+
+  issues Issue[]
+
+  @@index([userId, createdAt])
+  @@index([normalizedUrl])
+}
+
+model Issue {
+  id             String        @id @default(cuid())
+  auditId        String
+  audit          Audit         @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  severity       Severity
+  category       IssueCategory
+  title          String
+  description    String
+  recommendation String
+  whyItMatters   String
+  fixCode        String?
+  affectedUrl    String?
+  metadata       Json?
+
+  @@index([auditId, severity])
+}
