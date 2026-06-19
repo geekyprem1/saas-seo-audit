@@ -28,6 +28,11 @@ enum IssueCategory {
   ACCESSIBILITY
   IMAGES
   LINKS
+  CONVERSION
+  MESSAGING
+  TRUST
+  OFFER
+  MEDIA
 }
 
 enum AuditStatus {
@@ -66,6 +71,12 @@ model Audit {
   contentScore     Int?
   onPageScore      Int?
   accessibilityScore Int?
+  growthScore      Int?
+  conversionScore  Int?
+  messagingScore   Int?
+  trustScore       Int?
+  offerScore       Int?
+  mediaScore       Int?
   grade       String?
   rawHtml     String?
   pageData    Json?
@@ -92,6 +103,9 @@ model Issue {
   description    String
   recommendation String
   whyItMatters   String
+  businessImpact String?
+  seoImpact      String?
+  difficulty     String?
   fixCode        String?
   affectedUrl    String?
   metadata       Json?

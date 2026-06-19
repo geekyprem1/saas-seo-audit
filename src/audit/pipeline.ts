@@ -33,7 +33,8 @@ export type AuditRunResult = {
   finalUrl: string;
   durationMs: number;
   scores: CategoryScores;
-  seoScore: number;
+  growthScore: number;
+  seoScore: number; // for backwards compatibility
   grade: ReturnType<typeof scoreToGrade>;
   issues: IssueDraft[];
   performance: {
@@ -44,12 +45,13 @@ export type AuditRunResult = {
     ttfb: number | null;
     source: "psi" | "skipped" | "error";
   };
-  contentMetrics: CheckOutputs["metrics"]["content"];
+  metrics: CheckOutputs["metrics"];
   rawHtml?: string;
   aiSummary?: string;
   keywords?: any[];
   competitors?: any[];
   copyAnalysis?: any;
+  aiDataExtra?: any; // stores extra AI sections like founder verdict, quick wins, competitor risk
 };
 
 export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
@@ -96,8 +98,10 @@ export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
   for (const issue of issues) {
     scores = applyIssue(scores, issue);
   }
-  const seoScore = computeOverall(scores);
-  const grade = scoreToGrade(seoScore);
+  
+  // Calculate Growth Score based on weighted metrics
+  const growthScore = computeOverall(scores);
+  const grade = scoreToGrade(growthScore);
 
   let aiData = undefined;
   if (input.enhanceWithAi !== false) {
@@ -109,7 +113,8 @@ export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
       headings: [...page.h1, ...page.h2],
       issues,
       scores,
-      overallScore: seoScore,
+      overallScore: growthScore,
+      metrics: checks.metrics,
     });
   }
 
@@ -121,15 +126,17 @@ export async function runAudit(input: AuditRunInput): Promise<AuditRunResult> {
     finalUrl: fetchResult.finalUrl,
     durationMs: Date.now() - startedAt,
     scores,
-    seoScore,
+    growthScore,
+    seoScore: scores.TECHNICAL, // map to technical for backwards compatibility
     grade,
     issues,
     performance,
-    contentMetrics: checks.metrics.content,
+    metrics: checks.metrics,
     rawHtml: fetchResult.html,
     aiSummary: aiData?.aiSummary,
     keywords: aiData?.keywords,
     competitors: aiData?.competitors,
     copyAnalysis: aiData?.copyAnalysis,
+    aiDataExtra: aiData?.aiDataExtra,
   };
 }

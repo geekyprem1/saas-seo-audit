@@ -81,6 +81,7 @@ export function IssueExplorer({ issues }: { issues: IssueDraft[] }) {
               <TableHead>Issue</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Severity</TableHead>
+              <TableHead>Difficulty</TableHead>
               <TableHead className="text-right">Traffic Impact</TableHead>
             </TableRow>
           </TableHeader>
@@ -99,6 +100,12 @@ function IssueRow({ issue }: { issue: IssueDraft }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const trafficImpact = getMockTrafficImpact(issue);
 
+  const diffLabel = (issue.difficulty || "LOW").toUpperCase();
+  const diffColor = 
+    diffLabel === "HIGH" ? "text-red-500 bg-red-50 dark:bg-red-950/20 border-red-200" :
+    diffLabel === "MEDIUM" ? "text-amber-500 bg-amber-50 dark:bg-amber-950/20 border-amber-200" :
+    "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200";
+
   return (
     <Collapsible asChild open={isOpen} onOpenChange={setIsOpen}>
       <>
@@ -110,10 +117,10 @@ function IssueRow({ issue }: { issue: IssueDraft }) {
               </button>
             </CollapsibleTrigger>
           </TableCell>
-          <TableCell className="font-medium max-w-[300px] truncate" title={issue.title}>
+          <TableCell className="font-medium max-w-[280px] truncate" title={issue.title}>
             {issue.title}
           </TableCell>
-          <TableCell className="text-muted-foreground text-sm">
+          <TableCell className="text-muted-foreground text-xs">
             {CATEGORY_LABELS[issue.category as ScorableCategory] ?? issue.category}
           </TableCell>
           <TableCell>
@@ -121,8 +128,13 @@ function IssueRow({ issue }: { issue: IssueDraft }) {
               {SEVERITY_LABEL[issue.severity]}
             </span>
           </TableCell>
+          <TableCell>
+            <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold", diffColor)}>
+              {diffLabel}
+            </span>
+          </TableCell>
           <TableCell className="text-right">
-            <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 font-medium text-sm">
+            <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 font-medium text-xs">
               <TrendingUp className="mr-1 h-3 w-3" />
               +{trafficImpact}%
             </span>
@@ -130,49 +142,73 @@ function IssueRow({ issue }: { issue: IssueDraft }) {
         </TableRow>
         <CollapsibleContent asChild>
           <TableRow className="border-b-0 hover:bg-transparent">
-            <TableCell colSpan={5} className="p-0 border-b">
+            <TableCell colSpan={6} className="p-0 border-b">
               <div className="bg-muted/10 p-6 animate-in slide-in-from-top-2 duration-200">
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Left Column: Details */}
-                  <div className="space-y-4">
+                  <div className="space-y-4 text-xs">
                     <div>
-                      <h4 className="flex items-center text-sm font-semibold text-foreground mb-1">
-                        <AlertTriangle className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <h4 className="flex items-center text-xs font-bold text-foreground mb-1">
+                        <AlertTriangle className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
                         What we found
                       </h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed">
                         {issue.description}
                       </p>
                     </div>
-                    <div>
-                      <h4 className="flex items-center text-sm font-semibold text-foreground mb-1">
-                        <Info className="mr-2 h-4 w-4 text-muted-foreground" />
-                        Why it matters
-                      </h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {issue.whyItMatters}
-                      </p>
-                    </div>
+                    {issue.businessImpact && (
+                      <div>
+                        <h4 className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1">
+                          <TrendingUp className="mr-1.5 h-3.5 w-3.5" />
+                          Business & Conversion Impact
+                        </h4>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {issue.businessImpact}
+                        </p>
+                      </div>
+                    )}
+                    {issue.seoImpact && (
+                      <div>
+                        <h4 className="flex items-center text-xs font-bold text-blue-500 mb-1">
+                          <Info className="mr-1.5 h-3.5 w-3.5" />
+                          SEO & Visibility Impact
+                        </h4>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {issue.seoImpact}
+                        </p>
+                      </div>
+                    )}
+                    {!issue.businessImpact && (
+                      <div>
+                        <h4 className="flex items-center text-xs font-bold text-foreground mb-1">
+                          <Info className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
+                          Why it matters
+                        </h4>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {issue.whyItMatters}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Right Column: Fix */}
-                  <div className="space-y-4 rounded-lg bg-background p-4 border shadow-sm">
-                    <h4 className="flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                  <div className="space-y-4 rounded-lg bg-background p-4 border shadow-sm text-xs">
+                    <h4 className="flex items-center text-xs font-bold text-indigo-500">
+                      <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
                       How to fix it
                     </h4>
-                    <p className="text-sm text-foreground">
+                    <p className="text-foreground leading-relaxed">
                       {issue.recommendation}
                     </p>
                     {issue.fixCode && (
-                      <pre className="mt-3 overflow-x-auto rounded-md border bg-muted p-3 text-xs font-mono">
+                      <pre className="mt-3 overflow-x-auto rounded-md border bg-muted p-3 text-[10px] font-mono leading-normal">
                         <code>{issue.fixCode}</code>
                       </pre>
                     )}
                     {issue.affectedUrl && (
                       <div className="mt-3 pt-3 border-t">
-                        <p className="text-xs font-semibold text-muted-foreground mb-1">Affected URL</p>
-                        <a href={issue.affectedUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline break-all">
+                        <p className="text-[10px] font-semibold text-muted-foreground mb-1">Affected URL</p>
+                        <a href={issue.affectedUrl} target="_blank" rel="noreferrer" className="text-[10px] text-blue-600 hover:underline break-all">
                           {issue.affectedUrl}
                         </a>
                       </div>

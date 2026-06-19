@@ -7,105 +7,81 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { AuditForm } from "@/components/audit/audit-form";
 
 export const metadata: Metadata = {
-  title: "SaaS SEO Audit — Grow Your SaaS with Organic Traffic",
+  title: "SaaS Landing Page Analyzer — Optimize Conversions & Messaging",
   description:
-    "Get a complete SEO audit in seconds. Discover exactly what is holding your SaaS rankings back and what to fix first.",
+    "Discover why your landing page isn't converting. Get a complete copy, conversion, offer, and trust signals audit of your SaaS landing page in seconds.",
 };
 
 const FEATURES = [
   {
     icon: Search,
-    title: "Technical SEO Analysis",
-    body: "HTTPS, sitemap, robots, redirects, canonical, mobile-friendliness — checked in one crawl.",
+    title: "Messaging & Value Prop",
+    body: "Clarity, target audience specificity, and differentiation risk analysis — checked instantly.",
   },
   {
     icon: Sparkles,
-    title: "AI Recommendations",
-    body: "Every issue comes with a plain-English fix written by Gemini 2.5 Flash and DeepSeek fallback.",
+    title: "AI Growth Consultant",
+    body: "Plain-English recommendations detailing business and conversion impacts, not just generic SEO checklists.",
   },
   {
     icon: BarChart3,
-    title: "Competitor Tracking",
-    body: "Compare your title, meta, headings, word count, and links against three competitors side-by-side.",
+    title: "Conversion CTA Audits",
+    body: "Evaluate CTA wording, visual contrast, placement, and repetition to plug conversion leaks.",
   },
   {
     icon: Zap,
-    title: "Performance Score",
-    body: "Live LCP, FCP, CLS, and TTFB pulled straight from the Google PageSpeed Insights API.",
+    title: "Risk Reversal & Offer",
+    body: "Ensure pricing transparency, refunds, and satisfaction guarantees are optimized to capture signups.",
   },
   {
     icon: FileDown,
-    title: "PDF & CSV Reports",
-    body: "Export white-label-ready reports for clients, partners, or your investors.",
+    title: "Trust Signals & Proof",
+    body: "Checks for testimonials, partner logos, founder visibility, FAQs, and privacy legal policies.",
   },
   {
     icon: History,
-    title: "Audit History",
-    body: "Track SEO improvements over time. Re-run audits in one click and watch the score climb.",
+    title: "Immediate Quick Wins",
+    body: "Get a clear action list of wins under 1 hour, alongside 30-day and 90-day execution plans.",
   },
 ];
 
 const TESTIMONIALS = [
   {
     quote:
-      "We went from page 3 to page 1 for our highest-intent keyword in six weeks. The AI recommendations were the unlock.",
+      "We adjusted our hero H1 clarity and added a satisfaction guarantee based on the report. Conversions jumped 24% in two weeks.",
     name: "Maya Chen",
     role: "Founder, Linearstack",
   },
   {
     quote:
-      "I stopped guessing what to fix next. The audit tells me the three things that move the needle, in order.",
+      "The 'Competitor Positioning Risk' flag was a wake-up call. We realized our copy was identical to 50 other tools. Best $99/mo spent.",
     name: "Daniel Park",
     role: "Head of Growth, Quartzly",
   },
   {
     quote:
-      "We audit 40 client sites a month. The white-label PDF alone pays for the Agency plan ten times over.",
+      "I stop guessing what to optimize next. The Quick Wins section gave me 4 items that immediately reduced signup friction.",
     name: "Sofia Russo",
-    role: "SEO Lead, Northbeam Studio",
+    role: "SEO & Growth Lead, Northbeam",
   },
 ];
 
 const FAQS = [
   {
-    q: "How long does an audit take?",
-    a: "Most audits finish in 20–40 seconds. We crawl the page, run checks, fetch PageSpeed metrics, and enrich every issue with AI guidance.",
+    q: "How long does a landing page audit take?",
+    a: "Most audits finish in 20–40 seconds. We crawl your landing page, evaluate CTA placement, scan for trust markers, and generate a customized CRO report with AI.",
   },
   {
-    q: "Do you store the HTML of my site?",
-    a: "Only on paid plans and only for the duration needed to generate and review your report. We never sell or share site data.",
+    q: "Why is Growth Score better than a generic SEO score?",
+    a: "Founders don't just need search traffic—they need customer conversions. Growth Score weights Conversion (30%), Messaging (25%), Trust (20%), Technical (15%), and Performance (10%) to find out where your funnel is leaking.",
   },
   {
-    q: "Which AI models power the recommendations?",
-    a: "Gemini 2.5 Flash by default, with DeepSeek V4 Flash as an automatic fallback if the primary model is rate-limited.",
+    q: "Which AI models power the growth recommendations?",
+    a: "Gemini 2.5 Flash acts as the primary AI engine with automatic failovers, ensuring professional-grade copy critiques and action items.",
   },
   {
-    q: "Can I run audits without signing up?",
-    a: "Yes — the first audit is fully anonymous. Sign up free to keep your results, track history, and unlock the AI recommendations.",
-  },
-  {
-    q: "How accurate is the performance score?",
-    a: "We use Google's official PageSpeed Insights API with mobile-first metrics, the same data Google uses for ranking signals.",
-  },
-  {
-    q: "Do you support competitor analysis?",
-    a: "Competitor comparison ships on the Pro plan. You can compare up to three competitors on title length, meta, headings, word count, and internal link counts.",
-  },
-  {
-    q: "Can I export reports for clients?",
-    a: "Pro and Agency plans include CSV exports. Agency adds white-label PDF reports with your logo and brand color.",
-  },
-  {
-    q: "Do you have an API?",
-    a: "API access is included on the Agency plan. Every audit endpoint is REST-shaped and returns clean JSON.",
-  },
-  {
-    q: "How do you handle private or staging sites?",
-    a: "We block localhost, private IP ranges, and require public DNS. Staging sites need a public URL to be audited.",
-  },
-  {
-    q: "What if I find a bug or false positive?",
-    a: "Email support@saasseoaudit.com. We treat every report seriously and ship fixes within days.",
+    q: "What does the positioning risk check analyze?",
+    a: "It flags if your main headline relies on generic buzzwords (e.g. 'Boost your productivity with AI') that could easily belong to 100 other software products, prompting you to sharpen your unique hook.",
   },
 ];
 
@@ -120,17 +96,16 @@ export default function LandingPage() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--background)]/60 px-3 py-1 text-xs font-medium text-[var(--muted-foreground)] backdrop-blur">
                 <Sparkles className="size-3.5" />
-                Now with Gemini 2.5 Flash recommendations
+                This is not an SEO checker. It is an AI Growth Consultant.
               </div>
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-                Grow Your SaaS with{" "}
+                Discover why your landing page{" "}
                 <span className="bg-gradient-to-r from-indigo-500 to-sky-500 bg-clip-text text-transparent">
-                  Organic Traffic
+                  isn't converting.
                 </span>
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted-foreground)]">
-                Get a complete SEO audit in seconds and discover exactly what is
-                holding your rankings back.
+                Get a comprehensive conversion, messaging, trust, and offer audit in seconds. Built specifically for SaaS founders and indie hackers.
               </p>
               <div className="mt-10">
                 <AuditForm />
@@ -150,11 +125,10 @@ export default function LandingPage() {
                   Everything you need
                 </p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                  Six audits in one crawl
+                  Analyze your landing page like a CRO consultant
                 </h2>
                 <p className="mt-4 text-lg text-[var(--muted-foreground)]">
-                  Technical SEO, on-page, performance, content, accessibility,
-                  and link checks — run in parallel and graded A through F.
+                  Evaluating headlines, subheadlines, value propositions, CTA prominence, pricing risk reversals, founder signals, and Core Web Vitals in one unified run.
                 </p>
                 <Button asChild size="lg" className="mt-6">
                   <Link href="/audit/new">

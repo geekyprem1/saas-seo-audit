@@ -7,11 +7,13 @@ import {
 import { gradeColor, scoreToGrade, type Grade } from "@/lib/grades";
 
 const ORDER: ScorableCategory[] = [
+  "CONVERSION",
+  "MESSAGING",
+  "TRUST",
   "TECHNICAL",
-  "ON_PAGE",
   "PERFORMANCE",
+  "OFFER",
   "CONTENT",
-  "ACCESSIBILITY",
 ];
 
 export function ScoreBreakdown({

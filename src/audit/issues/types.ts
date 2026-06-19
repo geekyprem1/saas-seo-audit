@@ -16,6 +16,11 @@ export const IssueCategory = {
   ACCESSIBILITY: "ACCESSIBILITY",
   IMAGES: "IMAGES",
   LINKS: "LINKS",
+  CONVERSION: "CONVERSION",
+  MESSAGING: "MESSAGING",
+  TRUST: "TRUST",
+  OFFER: "OFFER",
+  MEDIA: "MEDIA",
 } as const;
 export type IssueCategory = (typeof IssueCategory)[keyof typeof IssueCategory];
 
@@ -27,6 +32,9 @@ export type IssueDraft = {
   description: string;
   recommendation: string;
   whyItMatters: string;
+  businessImpact?: string;
+  seoImpact?: string;
+  difficulty?: string;
   fixCode?: string;
   affectedUrl?: string;
   metadata?: Record<string, unknown>;
@@ -51,11 +59,19 @@ export const IssueDraftSchema = z.object({
     "ACCESSIBILITY",
     "IMAGES",
     "LINKS",
+    "CONVERSION",
+    "MESSAGING",
+    "TRUST",
+    "OFFER",
+    "MEDIA",
   ]),
   title: z.string().min(2),
   description: z.string().min(2),
   recommendation: z.string().min(2),
   whyItMatters: z.string().min(2),
+  businessImpact: z.string().optional(),
+  seoImpact: z.string().optional(),
+  difficulty: z.string().optional(),
   fixCode: z.string().optional(),
   affectedUrl: z.string().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),

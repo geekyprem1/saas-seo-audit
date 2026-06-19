@@ -12,7 +12,7 @@ import type { IssueDraft } from "@/audit/issues/types";
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
 function cacheKey(input: { checkId: string; normalizedUrl: string }): string {
-  return `ai:${createHash("sha256")
+  return `cro-ai-v2:${createHash("sha256")
     .update(`${input.normalizedUrl}|${input.checkId}`)
     .digest("hex")
     .slice(0, 32)}`;
@@ -27,7 +27,15 @@ export async function enhanceIssue(
   context: { url: string; title: string },
   options: { skipCache?: boolean } = {},
 ): Promise<IssueDraft> {
-  if (!hasOpenRouter) return issue;
+  // Apply fallback CRO metadata initially
+  const baseEnhanced = {
+    ...issue,
+    businessImpact: issue.businessImpact || "Optimizing this landing page element reduces signup friction and improves user conversions.",
+    seoImpact: issue.seoImpact || "Improves overall page structure, crawl accessibility, and keywords relevance.",
+    difficulty: issue.difficulty || "LOW",
+  };
+
+  if (!hasOpenRouter) return baseEnhanced;
 
   const redis = getRedis();
   const key = cacheKey({
@@ -40,9 +48,12 @@ export async function enhanceIssue(
       const cached = await redis.get<AIRecommendation>(key);
       if (cached) {
         return {
-          ...issue,
+          ...baseEnhanced,
           whyItMatters: cached.whyItMatters,
           recommendation: cached.recommendation,
+          businessImpact: cached.businessImpact || baseEnhanced.businessImpact,
+          seoImpact: cached.seoImpact || baseEnhanced.seoImpact,
+          difficulty: cached.difficulty || baseEnhanced.difficulty,
           fixCode: cached.fixCode ?? issue.fixCode,
         };
       }
@@ -65,7 +76,7 @@ export async function enhanceIssue(
       {
         role: "system",
         content:
-          "You rewrite SEO recommendations into clear, actionable advice. Always respond with strict JSON.",
+          "You rewrite landing page issues into concrete CRO and conversion advice. Always respond with strict JSON.",
       },
       { role: "user", content: prompt },
     ],
@@ -74,17 +85,31 @@ export async function enhanceIssue(
     maxTokens: 600,
   });
 
-  if (!raw) return issue;
+  if (!raw) return baseEnhanced;
 
   try {
-    const parsed = JSON.parse(raw);
+    let cleanRaw = raw.trim();
+    if (cleanRaw.startsWith("```")) {
+      const firstLineEnd = cleanRaw.indexOf("\n");
+      if (firstLineEnd !== -1) {
+        cleanRaw = cleanRaw.substring(firstLineEnd + 1);
+      } else {
+        cleanRaw = cleanRaw.substring(3);
+      }
+    }
+    if (cleanRaw.endsWith("```")) {
+      cleanRaw = cleanRaw.substring(0, cleanRaw.length - 3);
+    }
+    cleanRaw = cleanRaw.trim();
+
+    const parsed = JSON.parse(cleanRaw);
     const validated = AIRecommendationSchema.safeParse(parsed);
     if (!validated.success) {
       console.warn(
         "[ai] response failed schema",
         validated.error.flatten().fieldErrors,
       );
-      return issue;
+      return baseEnhanced;
     }
     if (redis) {
       try {
@@ -94,14 +119,17 @@ export async function enhanceIssue(
       }
     }
     return {
-      ...issue,
+      ...baseEnhanced,
       whyItMatters: validated.data.whyItMatters,
       recommendation: validated.data.recommendation,
+      businessImpact: validated.data.businessImpact,
+      seoImpact: validated.data.seoImpact,
+      difficulty: validated.data.difficulty,
       fixCode: validated.data.fixCode ?? issue.fixCode,
     };
   } catch (err) {
     console.warn("[ai] response parse failed", err);
-    return issue;
+    return baseEnhanced;
   }
 }
 

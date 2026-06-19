@@ -27,6 +27,7 @@ export default async function DashboardPage() {
       url: true,
       normalizedUrl: true,
       seoScore: true,
+      growthScore: true,
       grade: true,
       status: true,
       createdAt: true,
@@ -38,7 +39,7 @@ export default async function DashboardPage() {
   const avgScore = completed.length
     ? Math.round(
         completed.reduce(
-          (s: number, a: AuditRow) => s + (a.seoScore ?? 0),
+          (s: number, a: AuditRow) => s + (a.growthScore ?? a.seoScore ?? 0),
           0,
         ) / completed.length,
       )
@@ -52,12 +53,12 @@ export default async function DashboardPage() {
             Welcome back{user.name ? `, ${user.name.split(" ")[0]}` : ""}
           </h1>
           <p className="mt-1 text-[var(--muted-foreground)]">
-            Run a new audit or pick up where you left off.
+            Run a landing page analysis or review recent audits.
           </p>
         </div>
         <Button asChild>
           <Link href="/audit/new">
-            New audit <ArrowRight className="size-4" />
+            Analyze Landing Page <ArrowRight className="size-4" />
           </Link>
         </Button>
       </div>
@@ -66,7 +67,7 @@ export default async function DashboardPage() {
         <Card>
           <CardContent className="p-6">
             <p className="text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
-              Audits
+              Audits Run
             </p>
             <p className="mt-2 text-3xl font-bold tabular-nums">
               {audits.length}
@@ -81,11 +82,11 @@ export default async function DashboardPage() {
         <Card>
           <CardContent className="p-6">
             <p className="text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
-              Average score
+              Average Growth Score
             </p>
             <p className="mt-2 text-3xl font-bold tabular-nums">{avgScore}</p>
             <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-              Across {completed.length} completed audit
+              Across {completed.length} completed analyzer run
               {completed.length === 1 ? "" : "s"}
             </p>
           </CardContent>
@@ -104,22 +105,22 @@ export default async function DashboardPage() {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold">Recent audits</h2>
+        <h2 className="text-lg font-semibold">Recent Landing Page Analyses</h2>
         <div className="mt-3 space-y-2">
           {audits.length === 0 ? (
             <Card>
               <CardContent className="p-10 text-center">
                 <p className="text-sm text-[var(--muted-foreground)]">
-                  You haven&apos;t run any audits yet.
+                  You haven&apos;t run any landing page analyses yet.
                 </p>
                 <Button asChild className="mt-4">
-                  <Link href="/audit/new">Run your first audit</Link>
+                  <Link href="/audit/new">Analyze your first page</Link>
                 </Button>
               </CardContent>
             </Card>
           ) : (
             audits.map((audit: AuditRow) => {
-              const score = audit.seoScore ?? 0;
+              const score = audit.growthScore ?? audit.seoScore ?? 0;
               const grade = audit.grade
                 ? (audit.grade as keyof typeof gradeColor)
                 : scoreToGrade(score);

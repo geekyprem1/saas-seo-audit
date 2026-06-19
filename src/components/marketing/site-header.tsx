@@ -16,7 +16,7 @@ export async function SiteHeader() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
             <Logo />
-            <span className="font-semibold tracking-tight">SaaS SEO Audit</span>
+            <span className="font-semibold tracking-tight text-foreground">Landing Page Analyzer</span>
           </Link>
           <nav className="hidden items-center gap-6 text-sm md:flex">
             <Link

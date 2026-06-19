@@ -37,7 +37,7 @@ export function AppShell({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-64 shrink-0 border-r border-[var(--border)] bg-[var(--background)] md:flex md:flex-col">
+      <aside className="hidden w-64 shrink-0 border-r border-[var(--border)] bg-[var(--background)] md:flex md:flex-col print:hidden">
         <div className="flex h-16 items-center gap-2 border-b border-[var(--border)] px-6">
           <Logo />
           <span className="font-semibold tracking-tight">SaaS SEO Audit</span>
@@ -76,7 +76,7 @@ export function AppShell({
         </div>
       </aside>
       <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--background)]/80 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--background)]/80 px-4 backdrop-blur sm:px-6 print:hidden">
           <div className="md:hidden">
             <Link href="/" className="flex items-center gap-2">
               <Logo />
@@ -88,7 +88,7 @@ export function AppShell({
             {clerkEnabled ? <AppUserMenu signedIn={isSignedIn} /> : null}
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 print:p-0 print:m-0">{children}</main>
       </div>
     </div>
   );

@@ -108,8 +108,8 @@ export function AuditForm({
               required
             />
             <p className="text-xs text-[var(--muted-foreground)]">
-              We&apos;ll crawl the page, run technical and on-page checks, and
-              generate an SEO score in under a minute.
+              We&apos;ll crawl the page, run messaging, conversion, trust, and performance checks, and
+              generate a Growth Score in under a minute.
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export function AuditForm({
                 {status === "submitting" ? "Starting…" : "Analyzing…"}
               </>
             ) : (
-              "Run free audit"
+              "Analyze Landing Page"
             )}
           </Button>
 
@@ -133,7 +133,7 @@ export function AuditForm({
             <div className="space-y-2">
               <Skeleton className="h-3 w-full" />
               <p className="text-xs text-[var(--muted-foreground)]">
-                Crawling, scoring, and generating AI recommendations. This usually
+                Crawling, scoring, and generating AI growth recommendations. This usually
                 takes 20–40 seconds.
               </p>
             </div>
