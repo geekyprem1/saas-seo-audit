@@ -30,7 +30,6 @@ yarn-error.log*
 
 # dev artifacts
 dev.log
-.DS_Store
 
 # vercel
 .vercel
